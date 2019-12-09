@@ -12,5 +12,4 @@ Content-Type: application/json
   "login": "serveradmin",
   "password": "happyfeet"
 }
-
 ###
