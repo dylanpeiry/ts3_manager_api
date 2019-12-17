@@ -2,17 +2,16 @@ let express = require('express');
 let router = express.Router();
 const {TeamSpeak} = require('ts3-nodejs-library');
 
-let authRouter = require('./auth');
 //Specify if the user is currently connected to the serverquery
 let ts3 = null;
 let response = {success: false, data: {}};
 
-router.post('/auth/login', ((req, res, next) => {
+router.post('/auth/login', (req, res, next) => {
     TeamSpeak.connect({
-        host: "ts.s0kke.ch",
+        host: "dylanpeiry.ch",
         queryport: 10011,
         serverport: 9987,
-        username: req.body.login,
+        username: req.body.username,
         password: req.body.password,
         nickname: "NodeJS"
     }).then(teamspeak => {
@@ -27,14 +26,15 @@ router.post('/auth/login', ((req, res, next) => {
         res.send(response);
     })
 
-}));
+});
 
-router.post('/auth/logout', ((req, res, next) => {
+router.post('/auth/logout', (req, res, next) => {
     ts3 = null;
     response.success = true;
     response.data.message = "Disconnected.";
+    console.log(response);
     res.send(response);
-}));
+});
 
 router.get('/clients', async (req, res, next) => {
     if (ts3 != null) {
@@ -48,9 +48,47 @@ router.get('/clients', async (req, res, next) => {
     }
 });
 
-router.post('/clients', ((req, res, next) => {
-    res.send('POST Clients');
-}));
+router.get('/clients/ban', (req, res, next) => {
+    res.send('GET Clients banned');
+});
+
+router.delete('/clients', (req, res, next) => {
+    res.send('DELETE Clients');
+});
+
+router.post('/clients/ban', (req, res, next) => {
+    res.send('POST Banned clients');
+});
+
+router.put('/clients/ban',(req, res, next) => {
+    res.send('PUT Banned clients');
+});
+
+router.delete('/clients/ban',(req, res, next) => {
+    res.send('DELETE Banned clients');
+});
+
+router.post('/server/start', (req, res) => {
+    if (ts3 != null){
+        ts3.serverStart(1).then(e => {
+            console.log(e);
+        }).catch(e => {
+            console.log(e);
+        });
+    }
+
+});
+
+router.post('/server/stop', (req, res) => {
+    if (ts3 != null){
+        ts3.serverStop(1).then(e => {
+            console.log(e);
+        }).catch(e => {
+            console.log(e);
+        });
+    }
+
+});
 
 module.exports = router;
 
