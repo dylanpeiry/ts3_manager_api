@@ -60,12 +60,38 @@ router.post('/clients/ban', (req, res, next) => {
     res.send('POST Banned clients');
 });
 
+router.get('/clients/:id/servergroups', async (req, res) => {
+    let clientId = req.params.id;
+    console.log(clientId);
+    if (ts3 != null) {
+        response.success = true;
+        response.data = await ts3.serverGroupsByClientId(clientId);
+        res.send(response);
+    } else {
+        response.success = false;
+        response.data.message = "No connection.";
+        res.send(response);
+    }
+});
+
 router.put('/clients/ban',(req, res, next) => {
     res.send('PUT Banned clients');
 });
 
 router.delete('/clients/ban',(req, res, next) => {
     res.send('DELETE Banned clients');
+});
+
+router.get('/server/information',async (req, res) => {
+    if (ts3 != null) {
+        response.success = true;
+        response.data = await ts3.serverInfo();
+        res.send(response);
+    } else {
+        response.success = false;
+        response.data.message = "No connection.";
+        res.send(response);
+    }
 });
 
 router.post('/server/start', (req, res) => {
